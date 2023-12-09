@@ -18,5 +18,8 @@ void  exit_bul(char **cmd, char *input, char **argv, int c);
 int _isalpha(int c);
 int _atoi(char *s);
 void _prerror(char **argv, int c, char **cmd);
+int handle_builtin(char **cmd, int er);
+int check_cmd(char **cmd, char *input, char **argv);
+
 
 #endif

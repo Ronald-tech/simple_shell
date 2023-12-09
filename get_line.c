@@ -1,6 +1,7 @@
 #include "shell.h"
 
-int handle_builtin(char **cmd, ) {
+int handle_builtin(char **cmd, int er)
+{ 
 	char line[MAX_LINE_LENGTH];
 	char* args[MAX_ARGS];
 	int status;
@@ -26,6 +27,8 @@ int handle_builtin(char **cmd, ) {
 		else if (strcmp(args[0], "exit") == 0 ) {
 			exit(0);
 		}
+	
+		int check_cmd(char **cmd, char *input, char **argv)
 
 		//create a child process and execute the command
 		pid_t pid = fork();
