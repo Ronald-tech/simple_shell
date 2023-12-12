@@ -1,17 +1,16 @@
 #include "shell.h"
-
 /**
- * change_dir - Change Directory
+ * change_dir - Change Dirctorie
  * @cmd: Parsed Command
- * @er: Statue Last Command Executed
- * Return: 0 Success 1 Failed (For Old Pwd Aways 0 Case No Old PWD)
+ * @er: Statue Last Command Excuted
+ * Return: 0 Succes 1 Failed (For Old Pwd Always 0 Case No Old PWD)
  */
 int change_dir(char **cmd, __attribute__((unused))int er)
 {
 	int value = -1;
 	char cwd[PATH_MAX];
 
-	if(cmd[1] == NULL)
+	if (cmd[1] == NULL)
 		value = chdir(getenv("HOME"));
 	else if (_strcmp(cmd[1], "-") == 0)
 	{
@@ -34,19 +33,19 @@ int change_dir(char **cmd, __attribute__((unused))int er)
 	return (0);
 }
 /**
- * dis_env - Display Environment Variable
- * @cmd: Parsed Command
- * @er: Statue of Last command Excuted
- * Return: Always 0
+ * dis_env - Display Enviroment Variable
+ * @cmd:Parsed Command
+ * @er:Statue of Last command Excuted
+ * Return:Always 0
  */
-int dis_env(__atribute__((unused)) char **cmd, __atribute__((unused)) int er)
+int dis_env(__attribute__((unused)) char **cmd, __attribute__((unused)) int er)
 {
-	size_t i;
+size_t i;
 	int len;
 
 	for (i = 0; environ[i] != NULL; i++)
 	{
-		len = strlen(environ[i]);
+		len = _strlen(environ[i]);
 		write(1, environ[i], len);
 		write(STDOUT_FILENO, "\n", 1);
 	}
@@ -54,11 +53,11 @@ int dis_env(__atribute__((unused)) char **cmd, __atribute__((unused)) int er)
 }
 /**
  * display_help - Displaying Help For Builtin
- * @cmd: Parsed Command
- * @er: Statue of Last command Excuted
- * Return: Always 0 -1 Fail
+ * @cmd:Parsed Command
+ * @er: Statue Of Last Command Excuted
+ * Return: 0 Succes -1 Fail
  */
-int display_help(char **cmd, __atribute__((unused))int er)
+int display_help(char **cmd, __attribute__((unused))int er)
 {
 	int fd, fw, rd = 1;
 	char c;
@@ -83,33 +82,36 @@ int display_help(char **cmd, __atribute__((unused))int er)
 }
 /**
  * echo_bul - Excute Echo Cases
+ * @st:Statue Of Last Command Excuted
  * @cmd: Parsed Command
- * st: Statue Of Last Command Excuted
  * Return: Always 0 Or Excute Normal Echo
  */
 int echo_bul(char **cmd, int st)
 {
 	char *path;
-	unsigned int pid = getppid();
+	unsigned int  pid = getppid();
 
 	if (_strncmp(cmd[1], "$?", 2) == 0)
 	{
 		print_number_in(st);
-		PRINTER("\n";)
+		PRINTER("\n");
 	}
 	else if (_strncmp(cmd[1], "$$", 2) == 0)
 	{
 		print_number(pid);
 		PRINTER("\n");
+
 	}
 	else if (_strncmp(cmd[1], "$PATH", 5) == 0)
 	{
-		path - _getenv("PATH");
+		path = _getenv("PATH");
 		PRINTER(path);
 		PRINTER("\n");
 		free(path);
+
 	}
 	else
 		return (print_echo(cmd));
+
 	return (1);
 }

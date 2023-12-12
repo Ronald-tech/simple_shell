@@ -2,11 +2,11 @@
 /**
  * history - Fill File By User Input
  * @input: User Input
- * Return: -1 Fail 0 Success
+ * Return: -1 Fail 0 Succes
  */
 int history(char *input)
 {
-	char *filename =  ".simple_shell_history";
+	char *filename = ".simple_shell_history";
 	ssize_t fd, w;
 	int len = 0;
 
@@ -19,15 +19,15 @@ int history(char *input)
 	{
 		while (input[len])
 			len++;
-		w = write(fd, inpuit, len);
+		w = write(fd, input, len);
 		if (w < 0)
 			return (-1);
 	}
 	return (1);
 }
 /**
- * free_env - F ree Environment Variable Array
- * @env: Environment variables.
+ * free_env - Free Enviroment Variable Array
+ * @env:  Environment variables.
  * Return: Void
  */
 void free_env(char **env)
