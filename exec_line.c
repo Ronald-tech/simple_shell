@@ -1,117 +1,88 @@
 #include "shell.h"
+
 /**
- * change_dir - Change Dirctorie
+ * handle_builtin - Handle Builtin Command
  * @cmd: Parsed Command
- * @er: Statue Last Command Excuted
- * Return: 0 Succes 1 Failed (For Old Pwd Always 0 Case No Old PWD)
+ * @er:statue of last Excute
+ * Return: -1 Fail 0 Succes (Return :Excute Builtin)
  */
-int change_dir(char **cmd, __attribute__((unused))int er)
+
+int handle_builtin(char **cmd, int er)
 {
-	int value = -1;
-	char cwd[PATH_MAX];
+	 bul_t bil[] = {
+		{"cd", change_dir},
+		{"env", dis_env},
+		{"help", display_help},
+		{"echo", echo_bul},
+		{"history", history_dis},
+		{NULL, NULL}
+	};
+	int i = 0;
 
-	if (cmd[1] == NULL)
-		value = chdir(getenv("HOME"));
-	else if (_strcmp(cmd[1], "-") == 0)
+	while ((bil + i)->command)
 	{
-		value = chdir(getenv("OLDPWD"));
+		if (_strcmp(cmd[0], (bil + i)->command) == 0)
+		{
+			return ((bil + i)->fun(cmd, er));
+		}
+		i++;
 	}
-	else
-		value = chdir(cmd[1]);
+	return (-1);
+}
+/**
+ * check_cmd - Excute Simple Shell Command (Fork,Wait,Excute)
+ *
+ * @cmd:Parsed Command
+ * @input: User Input
+ * @c:Shell Excution Time Case of Command Not Found
+ * @argv:Program Name
+ * Return: 1 Case Command Null -1 Wrong Command 0 Command Excuted
+ */
+int check_cmd(char **cmd, char *input, int c, char **argv)
+{
+	int status;
+	pid_t pid;
 
-	if (value == -1)
+	if (*cmd == NULL)
 	{
-		perror("hsh");
 		return (-1);
 	}
-	else if (value != -1)
-	{
-		getcwd(cwd, sizeof(cwd));
-		setenv("OLDPWD", getenv("PWD"), 1);
-		setenv("PWD", cwd, 1);
-	}
-	return (0);
-}
-/**
- * dis_env - Display Enviroment Variable
- * @cmd:Parsed Command
- * @er:Statue of Last command Excuted
- * Return:Always 0
- */
-int dis_env(__attribute__((unused)) char **cmd, __attribute__((unused)) int er)
-{
-size_t i;
-	int len;
 
-	for (i = 0; environ[i] != NULL; i++)
-	{
-		len = _strlen(environ[i]);
-		write(1, environ[i], len);
-		write(STDOUT_FILENO, "\n", 1);
-	}
-	return (0);
-}
-/**
- * display_help - Displaying Help For Builtin
- * @cmd:Parsed Command
- * @er: Statue Of Last Command Excuted
- * Return: 0 Succes -1 Fail
- */
-int display_help(char **cmd, __attribute__((unused))int er)
-{
-	int fd, fw, rd = 1;
-	char c;
-
-	fd = open(cmd[1], O_RDONLY);
-	if (fd < 0)
+	pid = fork();
+	if (pid == -1)
 	{
 		perror("Error");
-		return (0);
+		return (-1);
 	}
-	while (rd > 0)
+
+	if (pid == 0)
 	{
-		rd = read(fd, &c, 1);
-		fw = write(STDOUT_FILENO, &c, rd);
-		if (fw < 0)
+		if (_strncmp(*cmd, "./", 2) != 0 && _strncmp(*cmd, "/", 1) != 0)
 		{
-			return (-1);
+			path_cmd(cmd);
 		}
+
+		if (execve(*cmd, cmd, environ) == -1)
+		{
+			print_error(cmd[0], c, argv);
+			free(input);
+			free(cmd);
+			exit(EXIT_FAILURE);
+		}
+		return (EXIT_SUCCESS);
 	}
-	_putchar('\n');
+	wait(&status);
 	return (0);
 }
 /**
- * echo_bul - Excute Echo Cases
- * @st:Statue Of Last Command Excuted
- * @cmd: Parsed Command
- * Return: Always 0 Or Excute Normal Echo
+ * signal_to_handel - Handle ^C
+ * @sig:Captured Signal
+ * Return: Void
  */
-int echo_bul(char **cmd, int st)
+void signal_to_handel(int sig)
 {
-	char *path;
-	unsigned int  pid = getppid();
-
-	if (_strncmp(cmd[1], "$?", 2) == 0)
+	if (sig == SIGINT)
 	{
-		print_number_in(st);
-		PRINTER("\n");
+		PRINTER("\n$ ");
 	}
-	else if (_strncmp(cmd[1], "$$", 2) == 0)
-	{
-		print_number(pid);
-		PRINTER("\n");
-
-	}
-	else if (_strncmp(cmd[1], "$PATH", 5) == 0)
-	{
-		path = _getenv("PATH");
-		PRINTER(path);
-		PRINTER("\n");
-		free(path);
-
-	}
-	else
-		return (print_echo(cmd));
-
-	return (1);
 }

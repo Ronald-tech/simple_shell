@@ -1,110 +1,96 @@
 #include "shell.h"
 /**
- * _strcpy - Copie Source To Destination Char
- * @dest:Destination
- * @src:Source
- * Return: Copie Of Char *
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
  */
-char *_strcpy(char *dest, char *src)
+int _putchar(char c)
+{
+	return (write(1, &c, 1));
+}
+/**
+ * _strncpy - copie a string
+ * @dest:char
+ *  @src:char
+ * @n:int
+ * Return:char
+ */
+
+char *_strncpy(char *dest, char *src, int n)
 {
 	int i;
 
 	i = 0;
-	while (src[i])
+	while (i < n && *(src + i))
 	{
-		dest[i] = src[i];
+		*(dest + i) = *(src + i);
 		i++;
 	}
-	dest[i] = '\0';
+	while (i < n)
+	{
+		*(dest + i) = '\0';
+		i++;
+	}
 	return (dest);
 }
+
 /**
- * _strcat - Concat Two String
- * @dest:First String
- * @src:Second String
- * Return:First String + Second String Char *
+ * _strlen - lenght of string
+ * @s:char
+ * Return:int
  */
-char *_strcat(char *dest, char *src)
+
+int _strlen(char *s)
 {
-	char *s = dest;
+	int i;
 
-	while (*dest != '\0')
+	for (i = 0; s[i] != '\0'; i++)
 	{
-		dest++;
+		continue;
 	}
+	return (i);
+}
 
-	while (*src != '\0')
+/**
+ * _atoi - convert to a int
+ * @s:string
+ * Return:int
+ */
+int _atoi(char *s)
+{
+	int i, j, n, x;
+
+	i = n = 0;
+	x = 1;
+	while ((s[i] < '0' || s[i] > '9') && (s[i] != '\0'))
 	{
-		*dest = *src;
-		dest++;
-		src++;
+		if (s[i] == '-')
+			x *= -1;
+		i++;
 	}
-	*dest = '\0';
-	return (s);
+	j = i;
+	while ((s[j] >= '0') && (s[j] <= '9'))
+	{
+		n = (n * 10) + x * ((s[j]) - '0');
+		j++;
+	}
+	return (n);
 }
 /**
- * _strchr - Locate Charactere In String
- * @s:String Search In
- * @c:Char To Search For
- * Return: Pointer To Char*
+ * _puts - print a string
+ * @str:pointer char
+ * return:void
  */
-char *_strchr(char *s, char c)
+void _puts(char *str)
 {
+	int i;
 
-	do		{
-
-		if (*s == c)
-		{
-			break;
-		}
-	}	while (*s++);
-
-	return (s);
-}
-/**
- * _strncmp - Compare Amount (n) Of Characters Of Two Strings.
- * @s1: A String.
- * @s2: A String.
- * @n: Amount Of Characters To Compare.
- *
- * Return: 1 If The Strings Don't Match Otherwise 0
- */
-int _strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t i;
-
-	if (s1 == NULL)
-		return (-1);
-	for (i = 0; i < n && s2[i]; i++)
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		if (s1[i] != s2[i])
-		{
-			return (1);
-		}
+		_putchar(str[i]);
 	}
-	return (0);
-}
-/**
- * _strdup - Duplicate A String
- * @str:String
- * Return: Duplicate String Failed Null
- */
-char *_strdup(char *str)
-{
-	size_t len, i;
-	char *str2;
-
-	len = _strlen(str);
-	str2 = malloc(sizeof(char) * (len + 1));
-	if (!str2)
-	{
-		return (NULL);
-	}
-
-	for (i = 0; i <= len; i++)
-	{
-		str2[i] = str[i];
-	}
-
-	return (str2);
+	_putchar('\n');
+	return;
 }
