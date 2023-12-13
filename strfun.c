@@ -70,7 +70,7 @@ char *_itoa(unsigned int n)
 	return (s);
 }
 /**
- *  array_rev - Reverse Array
+ * array_rev - Reverse Array
  * @arr:Array To Reverse
  * @len:Length Of Array
  * Return: Void(Reverse Array)

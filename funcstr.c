@@ -13,7 +13,7 @@ int _putchar(char c)
 /**
  * _strncpy - copie a string
  * @dest:char
- *  @src:char
+ * @src:char
  * @n:int
  * Return:char
  */
@@ -92,5 +92,5 @@ void _puts(char *str)
 		_putchar(str[i]);
 	}
 	_putchar('\n');
-	return;
+	return (0);
 }
