@@ -11,7 +11,7 @@ int _putchar(char c)
 	return (write(1, &c, 1));
 }
 /**
- * _strncpy - copie a string
+ * *_strncpy - copie a string
  * @dest:char
  * @src:char
  * @n:int
